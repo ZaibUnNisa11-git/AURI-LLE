@@ -21,14 +21,18 @@ app.get('/', (req, res) => res.json({ app: 'AURIÈLLE API', status: 'operational
 app.use('/api', healthRoutes);
 app.use(errorHandler);
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(env.port, () => console.log(`AURIÈLLE API running on http://localhost:${env.port}`));
-  } catch (error) {
-    console.error('Failed to start server:', error.message);
-    process.exitCode = 1;
-  }
+// Keep the API health endpoint available even while MongoDB is starting or unavailable.
+const server = app.listen(env.port, () => {
+  console.log(`AURIÈLLE API running on http://localhost:${env.port}`);
+});
+
+connectDB().catch((error) => {
+  console.error('MongoDB connection failed; API remains available:', error.message);
+});
+
+const shutdown = () => {
+  server.close(() => process.exit(0));
 };
 
-startServer();
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

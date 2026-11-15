@@ -78,14 +78,14 @@ npm run dev
 
 Open the Vite URL (normally `http://localhost:5173`). The backend health endpoint is `http://localhost:5000/api/health`.
 
-To verify the frontend production build:
+Verify the frontend production build with:
 
 ```bash
 cd frontend
 npm run build
 ```
 
-To verify the API health response without a MongoDB server, set `MONGODB_URI=` in `backend/.env`. To use MongoDB, set `MONGODB_URI` to a working connection string. Never use a production credential in local examples.
+The API starts listening even if MongoDB is unavailable. The health endpoint reports MongoDB's connection state as `disconnected`, `connecting`, or `connected`. To use MongoDB, set `MONGODB_URI` to a working connection string. Never use a production credential in local examples.
 
 ## Environment variables
 
