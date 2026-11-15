@@ -1,22 +1,23 @@
 # AURIÈLLE
 
-AURIÈLLE is a luxury jewellery e-commerce storefront concept designed with an elegant, feminine, premium aesthetic. This project is being built in stages, beginning with a polished foundation, design system, and project structure ready for future storefront and commerce features.
+AURIÈLLE is a luxury jewellery e-commerce project with an elegant, feminine, premium visual identity. Development is staged; this repository currently provides the Stage 1 foundation and design system.
 
 ## Stack
 
 - Frontend: React + Vite + JavaScript
 - Backend: Node.js + Express
-- Database: MongoDB with modular Mongoose models and configuration
-- Styling: Global CSS variables with responsive design system
-- Future integration: n8n-ready chatbot configuration module (placeholder only, not active)
+- Database: MongoDB using modular Mongoose configuration and models
+- Styling: responsive CSS design system with global custom properties
 
-## Repository structure
+## Project structure
 
 ```text
 AURI-LLE/
 ├── README.md
 ├── .gitignore
 ├── .env.example
+├── docs/
+│   └── future-chatbot-integration.md
 ├── frontend/
 │   ├── .env.example
 │   ├── index.html
@@ -25,100 +26,75 @@ AURI-LLE/
 │   └── src/
 │       ├── App.jsx
 │       ├── main.jsx
-│       ├── components/
-│       │   ├── Common/
-│       │   │   └── SectionHeading.jsx
-│       │   └── Layout/
-│       │       ├── AnnouncementBar.jsx
-│       │       ├── TopNav.jsx
-│       │       └── SiteFooter.jsx
-│       ├── config/
-│       │   └── appConfig.js
-│       ├── services/
-│       │   └── chatbotService.js
-│       └── styles/
-│           └── global.css
-├── backend/
-│   ├── package.json
-│   ├── server.js
-│   ├── config/
-│   │   ├── db.js
-│   │   └── environment.js
-│   ├── controllers/
-│   │   └── healthController.js
-│   ├── middleware/
-│   │   └── errorHandler.js
-│   ├── models/
-│   │   ├── Category.js
-│   │   ├── Order.js
-│   │   ├── Product.js
-│   │   └── User.js
-│   └── routes/
-│       └── healthRoutes.js
-└── docs/
-    └── future-chatbot-integration.md
+│       ├── components/Common/SectionHeading.jsx
+│       ├── components/Layout/{AnnouncementBar,TopNav,SiteFooter}.jsx
+│       ├── config/appConfig.js
+│       ├── services/chatbotService.js
+│       └── styles/global.css
+└── backend/
+    ├── .env.example
+    ├── package.json
+    ├── server.js
+    ├── config/{db,environment}.js
+    ├── controllers/healthController.js
+    ├── middleware/errorHandler.js
+    ├── models/{Category,Order,Product,User}.js
+    └── routes/healthRoutes.js
 ```
 
-## Getting started
+## Requirements
 
-### Prerequisites
+- Node.js 18 or newer (Node 20 LTS recommended)
+- npm 9 or newer
+- MongoDB, if you want to test database connectivity (the API health route can run without a configured MongoDB URI)
 
-- Node.js 18+
-- npm 9+
-- MongoDB running locally or connection string available
+## Install and configure
 
-### 1) Install dependencies
-
-```bash
-# Frontend
-cd frontend
-npm install
-
-# Backend
-cd ../backend
-npm install
-```
-
-### 2) Configure environment variables
-
-Create a `.env` file based on the provided examples:
+From the repository root:
 
 ```bash
-cp .env.example .env
-cp frontend/.env.example frontend/.env
+cd frontend && npm install
+cd ../backend && npm install
+cd ..
 cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-### 3) Start databases and development servers
+Alternatively, the backend can read a root `.env`; create it from `.env.example` instead of `backend/.env`. Backend-specific `.env` values take precedence. Do not commit `.env` files.
+
+## Run the applications
+
+In two terminals from the repository root:
 
 ```bash
-# Terminal 1: backend
+# Terminal 1 — backend
 cd backend
 npm run dev
 
-# Terminal 2: frontend
+# Terminal 2 — frontend
 cd frontend
 npm run dev
 ```
 
-The frontend typically runs on `http://localhost:5173` and the backend on `http://localhost:5000`.
+Open the Vite URL (normally `http://localhost:5173`). The backend health endpoint is `http://localhost:5000/api/health`.
 
-## Stage 1 status
+To verify the frontend production build:
 
-This phase establishes the foundational architecture and luxury identity for the storefront, including:
+```bash
+cd frontend
+npm run build
+```
 
-- Premium AURIÈLLE colour palette and typography
-- Responsive CSS system and base layout
-- Frontend + backend project scaffolding
-- Modular database and environment configuration
-- n8n chatbot integration placeholder with environment-based configuration
+To verify the API health response without a MongoDB server, set `MONGODB_URI=` in `backend/.env`. To use MongoDB, set `MONGODB_URI` to a working connection string. Never use a production credential in local examples.
 
-## Notes
+## Environment variables
 
-- The chatbot is intentionally not active in this stage.
-- Payment collection is not enabled in this stage.
-- Product data is not yet connected to a live database; the backend is ready for it.
+- Backend: `PORT`, `MONGODB_URI`, `JWT_SECRET`, `NODE_ENV`, `FRONTEND_URL`
+- Frontend: `VITE_API_BASE_URL`, `VITE_CHATBOT_ENABLED`, `VITE_CHATBOT_WEBHOOK_URL`
+- Frontend `VITE_` values are public build-time configuration; do not put private keys or credentials in them. Keep the chatbot disabled in this stage.
 
-## License
+## Current stage
 
-This project is being developed for the AURIÈLLE storefront implementation and is not yet production-deployed.
+Stage 1 establishes the brand palette, typography, responsive base layout, application scaffolding, modular MongoDB models/configuration, and environment examples. The catalogue, real product imagery/data, cart, checkout, accounts, and admin tools are not implemented yet.
+
+The n8n concierge is not built or active. Its integration notes and disabled configuration placeholder are separate from the storefront. Do not set a private webhook credential in frontend environment variables; a future private integration should be proxied through the backend.

@@ -1,39 +1,34 @@
+import dotenv from 'dotenv';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import { getEnvironment } from './config/environment.js';
 import healthRoutes from './routes/healthRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 
-dotenv.config({ path: '../.env' });
+const backendDirectory = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: resolve(backendDirectory, '.env') });
+dotenv.config({ path: resolve(backendDirectory, '../.env'), override: false });
 
 const app = express();
 const env = getEnvironment();
 
 app.use(cors({ origin: env.frontendUrl, credentials: true }));
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.json({
-    app: 'AURIÈLLE API',
-    status: 'operational',
-    environment: env.nodeEnv
-  });
-});
-
+app.get('/', (req, res) => res.json({ app: 'AURIÈLLE API', status: 'operational', environment: env.nodeEnv }));
 app.use('/api', healthRoutes);
 app.use(errorHandler);
 
-const port = env.port;
-
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`AURIÈLLE API running on http://localhost:${port}`);
-    });
-  })
-  .catch((error) => {
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(env.port, () => console.log(`AURIÈLLE API running on http://localhost:${env.port}`));
+  } catch (error) {
     console.error('Failed to start server:', error.message);
-    process.exit(1);
-  });
+    process.exitCode = 1;
+  }
+};
+
+startServer();

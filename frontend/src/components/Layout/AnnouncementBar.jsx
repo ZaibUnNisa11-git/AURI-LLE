@@ -1,9 +1,7 @@
 import { MapPin, Sparkles } from 'lucide-react';
 
 function AnnouncementBar() {
-  return (
-    <div className="announcement-bar">Free shipping on orders over $200 • New collection now available</div>
-  );
+  return <div className="announcement-bar">A considered collection for every moment · Discover the AURIÈLLE edit</div>;
 }
 
 export default AnnouncementBar;
